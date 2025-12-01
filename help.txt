@@ -1,0 +1,1023 @@
+Got it — I’ll give a detailed, step-by-step process for every experiment/task covered in your PDF (no screenshots). I pulled the tasks from your uploaded lab record and expanded each into clear, actionable steps, commands, and troubleshooting tips. This follows the experiments and scenarios listed in the PDF. 
+
+SE_Record_final
+
+I’ll organize each experiment with: Goal → Prerequisites → Step-by-step instructions (commands + explanation) → Verification → Troubleshooting / tips.
+
+1. Software Installation & SRS Document
+
+(PDF: index / SRS section — create Software Requirement Specification and document metadata.) 
+
+SE_Record_final
+
+Goal
+
+Produce a formal SRS (Abstract, FR, NFR, users, workflows, use cases) and list required software (no install screenshots).
+
+Prerequisites
+
+Text editor or Word (LibreOffice / MS Word)
+
+Basic knowledge of system and stakeholders
+
+Steps
+
+Abstract
+
+One paragraph describing the application/system scope, purpose, and audience.
+
+Example: “This system is a web-based … to allow users to …”
+
+Functional Requirements (FR)
+
+List functional capabilities as numbered items (e.g., FR-1 Login, FR-2 CRUD for items, FR-3 Search).
+
+For each FR include: brief description, actor, pre/post conditions.
+
+Non-Functional Requirements (NFR)
+
+Performance (response time under X ms), Security (TLS, authentication), Availability (99.5%), Scalability, Backup, Logging.
+
+Use measurable statements: “System shall handle 1000 concurrent users with average latency < 300ms.”
+
+User Identification
+
+List user types: Admin, Registered User, Guest, API Client.
+
+Provide short persona for each.
+
+Workflow of Each User
+
+For each persona write a step-by-step flow (e.g., Login → Browse → Add to Cart → Checkout).
+
+Use Cases
+
+For each main flow write use case: Title, Actor, Precondition, Flow of events (main and alternative), Postcondition.
+
+Example: Use Case: “Reset Password” — Actor: Registered User — Steps: request reset, receive email, reset.
+
+Verification
+
+Review for coverage, completeness, and measurable NFRs.
+
+Deliver a one-page SRS summary + detailed sections.
+
+Tips
+
+Save SRS as SRS_<project>.docx and PDF.
+
+Keep traceability matrix mapping FRs to test cases.
+
+2. Exploring Git (Local & Remote) — Multi-Folder Project
+
+(PDF pages with scenario questions and commands — see scenario list).) 
+
+SE_Record_final
+
+Goal
+
+Learn full set of Git local & remote commands; push multi-folder project; solve scenario-based git tasks.
+
+Prerequisites
+
+Git installed
+
+GitHub/GitLab account
+
+SSH key or HTTPS credentials configured
+
+Steps (detailed commands & explanations)
+
+Initialize local repo
+
+cd /path/to/project
+
+git init
+
+git add .
+
+git commit -m "Initial commit"
+
+Create remote and push
+
+Create repo on GitHub (via UI) named project-repo.
+
+Link:
+
+HTTPS: git remote add origin https://github.com/USER/project-repo.git
+
+SSH: git remote add origin git@github.com:USER/project-repo.git
+
+Push: git branch -M main then git push -u origin main
+
+Working with multi-folder project
+
+Keep meaningful .gitignore in root (e.g., target/, node_modules/, .env)
+
+Use git status, git diff, git add path/to/file, git commit -m "..."
+
+To add only parts of file: git add -p
+
+Common local commands
+
+git status — see changes
+
+git log --oneline --graph --decorate — view history
+
+git restore --staged file — unstage
+
+git checkout -- file — discard working copy changes (careful)
+
+Scenario solutions (concise commands + why)
+
+Non-fast-forward push: git pull --rebase origin main then resolve conflicts, git push origin main.
+Why: rebase keeps history linear and places your commits on top.
+
+Push feature branch without affecting main: git checkout -b feature/x → git push -u origin feature/x
+
+Update local when new branches added: git fetch origin → git branch -r → git checkout -b newbranch origin/newbranch
+
+Avoid merge conflicts when pulling:
+
+git stash (save local changes)
+
+git pull --rebase origin main
+
+git stash pop
+
+Remove sensitive file accidentally pushed:
+
+git rm --cached path/to/file
+
+git commit -m "Remove sensitive file"
+
+git push origin --force (if needed) — but if secret is in history use bfg or git filter-branch then rotate secret.
+
+Integrate latest main into feature branch:
+
+Option A (rebase): git fetch origin → git rebase origin/main
+
+Option B (merge): git merge origin/main
+
+Change remote to a different repo:
+
+git remote set-url origin https://github.com/OTHERUSER/newrepo.git
+
+git push -u origin branch-name
+
+Resolve conflicts:
+
+Edit markers <<<<<<< / ======= / >>>>>>>, git add file, git rebase --continue or git commit
+
+Delete remote branch: git push origin --delete feature/branch-name
+
+Advanced useful commands
+
+git reflog — recover lost commits
+
+git bisect — find commit that introduced bug
+
+git blame file — who changed each line
+
+git tag -a v1.0 -m "Release 1.0" ; git push origin --tags
+
+Verification
+
+git log shows commits, git ls-remote shows remote refs, git branch -a lists branches.
+
+Troubleshooting
+
+Authentication issues: check ssh -T git@github.com or cached credentials (git credential-manager).
+
+Force push only after team consensus.
+
+3. Collaborative Coding Using Git (Organization & PR Workflow)
+
+(PDF shows organization, forks, PRs.) 
+
+SE_Record_final
+
+Goal
+
+Use GitHub Organization, invite members, fork/clone, create branches, and perform PR reviews and conflict resolution.
+
+Prerequisites
+
+GitHub organization admin or repo owner rights.
+
+Steps
+
+Create Organization
+
+GitHub UI → New organization → set billing/team/roles.
+
+Add members to team, set roles (member/maintainer).
+
+Repository setup
+
+Owner creates central repo → Add collaborators or set team permissions.
+
+Fork & clone workflow (if not direct access)
+
+Developer forks repository (GitHub UI).
+
+git clone git@github.com:youruser/forked-repo.git
+
+Add upstream remote: git remote add upstream git@github.com:org/original-repo.git
+
+Feature branch workflow
+
+git checkout -b feature/xxx
+
+Implement changes, git add → git commit
+
+git fetch upstream → git rebase upstream/main (keeps fork updated)
+
+Push to your fork: git push origin feature/xxx
+
+Create Pull Request (PR)
+
+On GitHub click “Compare & pull request” — describe changes, link issues.
+
+Choose reviewers, assign labels, pipelines should run (CI).
+
+Resolve conflicts
+
+If conflict flagged, pull latest, fix locally: git fetch upstream → git checkout feature/xxx → git rebase upstream/main → fix markers → git add → git rebase --continue → git push --force-with-lease origin feature/xxx
+
+Create & apply patch
+
+Create patch: git format-patch origin/main --stdout > changes.patch
+
+Apply patch: git apply changes.patch or git am < patchfile
+
+Verification
+
+PR merged, CI passes, git log shows merge commit or fast-forward.
+
+Tips
+
+Use --force-with-lease instead of --force to avoid blowing away others’ work.
+
+Protect main branch with required reviews & passing status checks.
+
+4. Build & Package Java/Web Applications Using Maven
+
+(PDF covers creating maven projects, web projects, parent/multi-module.) 
+
+SE_Record_final
+
+Goal
+
+Create Maven Java and Web projects, manage dependencies, compile, run tests, package JAR/WAR.
+
+Prerequisites
+
+Java JDK installed (e.g., OpenJDK 11/17)
+
+Maven installed (mvn -v)
+
+IDE (Eclipse/IntelliJ) optional
+
+Steps
+
+Create a simple Maven project
+
+CLI: mvn archetype:generate -DgroupId=com.example -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+cd myapp
+
+mvn package → generates target/myapp-1.0-SNAPSHOT.jar
+
+Project structure
+
+src/main/java, src/test/java, pom.xml
+
+Add dependencies
+
+Edit pom.xml:
+
+<dependency>
+  <groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <version>4.13.2</version>
+  <scope>test</scope>
+</dependency>
+
+
+Run mvn clean install to download dependencies and package.
+
+Create Maven web project (WAR)
+
+mvn archetype:generate -DgroupId=com.example.web -DartifactId=webapp -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+
+Place web content in src/main/webapp (e.g., index.html, WEB-INF/web.xml).
+
+mvn package produces target/webapp.war
+
+Parent + multi-module projects
+
+Create parent POM:
+
+<packaging>pom</packaging>
+<modules>
+  <module>module-a</module>
+  <module>module-b</module>
+</modules>
+
+
+In child modules set parent coordinates in their pom.xml.
+
+mvn clean install at parent builds all modules.
+
+Common Maven goals
+
+mvn compile, mvn test, mvn package, mvn install (into local repo), mvn deploy (remote repo)
+
+Use mvn -DskipTests package to skip tests if needed.
+
+Handling dependency conflicts
+
+Use mvn dependency:tree to inspect.
+
+Use <dependencyManagement> in parent POM to set versions centrally.
+
+Use exclusions to drop transitive versions.
+
+Verification
+
+target/*.jar or target/*.war present.
+
+Run JAR: java -jar target/myapp-1.0-SNAPSHOT.jar (if executable).
+
+Deploy WAR to Tomcat: copy to webapps/ or use Jenkins deploy step.
+
+Troubleshooting
+
+If mvn package fails, read mvn -X for debug.
+
+If classpath issues, ensure scope is correct (compile/test/provided).
+
+5. Docker CLI Commands & Nginx on Ubuntu Container
+
+(PDF steps: pull Ubuntu, run container, install nginx, map ports, edit index.html.) 
+
+SE_Record_final
+
+Goal
+
+Use Docker CLI to pull images, run containers, install nginx inside Ubuntu container and serve a custom page.
+
+Prerequisites
+
+Docker installed & running
+
+Basic shell terminal
+
+Steps
+
+Pull Ubuntu image
+
+docker pull ubuntu:latest
+
+Run container mapping host port 3000 → container 80
+
+docker run -itd --name myubuntu -p 3000:80 ubuntu:latest /bin/bash
+
+This runs a container in detached mode with an interactive shell as entrypoint.
+
+Install nginx inside container
+
+Enter container: docker exec -it myubuntu bash
+
+Inside container:
+
+apt-get update
+apt-get install -y nginx nano
+
+
+Stop nginx default logging or start it: service nginx start (or /etc/init.d/nginx start)
+
+Edit default index
+
+cd /var/www/html
+
+nano index.html → change <h1> content to custom message
+
+Save, exit.
+
+View from host
+
+On host, open http://localhost:3000/
+
+If host is remote, ensure firewall/security group allows port 3000.
+
+Common Docker commands
+
+docker ps (running containers)
+
+docker ps -a (all)
+
+docker images
+
+docker stop myubuntu
+
+docker start myubuntu
+
+docker rm myubuntu to remove container
+
+docker rmi image_name to remove image
+
+Verification
+
+curl http://localhost:3000/ returns your custom HTML.
+
+docker logs myubuntu to see nginx logs.
+
+Tips
+
+For production, create a Dockerfile with nginx image rather than installing inside Ubuntu.
+
+6. Docker Image Creation & Docker Compose
+
+(PDF discusses image via commit and Dockerfile, docker-compose to run multi services, WordPress + MySQL example, Flask app.) 
+
+SE_Record_final
+
+Goal
+
+Create Docker images via Dockerfile, run multi-container apps with docker-compose, deploy WordPress+MySQL and a Flask app.
+
+Prerequisites
+
+Docker, Docker Compose (or Docker CLI v20+ supports docker compose)
+
+Project files (Dockerfile, docker-compose.yml, app files)
+
+Steps
+
+Create Dockerfile (example for simple app)
+
+Example for a Flask app:
+
+FROM python:3.10-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+
+Build: docker build -t myflaskapp:latest .
+
+Create image using container commit (less recommended)
+
+Start container, make changes, then: docker commit <container-id> username/image-name:tag
+
+docker-compose.yml example (Flask + Redis)
+
+version: "3.8"
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+  redis:
+    image: "redis:alpine"
+
+
+Run: docker-compose up --build -d
+
+Stop: docker-compose down
+
+Run two Nginx servers on different ports
+
+Two services with different ports in compose:
+
+nginx1:
+  image: nginx
+  ports: ["8080:80"]
+nginx2:
+  image: nginx
+  ports: ["8081:80"]
+
+
+WordPress + MySQL via docker-compose
+
+Example:
+
+version: '3.8'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - db_data:/var/lib/mysql
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_PASSWORD: example
+volumes:
+  db_data:
+
+
+docker-compose up -d → open http://localhost:8000 and follow WordPress setup.
+
+Flask app with compose and Dockerfile
+
+Place app.py, requirements.txt, Dockerfile, docker-compose.yml
+
+Compose example similar to above; docker compose up --build -d
+
+Verification
+
+docker-compose ps shows running services.
+
+Access service ports on host to verify pages.
+
+Troubleshooting
+
+Volume permission issues: set proper UID/GID or use named volumes.
+
+If ports already in use, change mapping or stop conflicting service.
+
+7. Creating a Multi-Module Maven Project
+
+(PDF repeats Maven multi-module creation.) 
+
+SE_Record_final
+
+Goal
+
+Create parent POM and multiple modules, build them together.
+
+Prerequisites
+
+Maven installed
+
+Steps
+
+Create parent directory
+
+mkdir parent-project && cd parent-project
+
+Create pom.xml:
+
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>module-a</module>
+    <module>module-b</module>
+  </modules>
+</project>
+
+
+Create child modules
+
+mvn archetype:generate inside each module or copy module skeleton with own pom.xml with <parent> set to parent coordinates.
+
+Build parent
+
+mvn clean install at parent root builds child modules in order.
+
+Verification
+
+Child artifacts installed in local .m2/repository and target/ folders present.
+
+8. Jenkins Automation (Freestyle Jobs)
+
+(PDF describes MavenJava, MavenWeb jobs and chaining.) 
+
+SE_Record_final
+
+Goal
+
+Set up Jenkins jobs to build, test and deploy Maven projects, archive artifacts and chain jobs.
+
+Prerequisites
+
+Jenkins installed & running
+
+Java & Maven on Jenkins node
+
+Git repo URL accessible
+
+Steps
+
+Create Freestyle job for Maven Java
+
+Jenkins → New Item → maven_java → Freestyle project
+
+Source Code Management: Git → repo URL
+
+Build environment: set MAVEN_HOME or use Maven installations in Jenkins global config
+
+Build step: “Invoke top-level Maven targets” → Goals: clean install
+
+Post-build: Archive artifacts **/* and Trigger other job MavenJava_Test
+
+Create MavenJava_Test
+
+SCM: none (it copies artifacts)
+
+Build step: “Copy artifacts from another project” → select maven_java and **/*
+
+Build step: run tests: mvn test (or invoke maven)
+
+Post-build: archive artifacts, trigger next job if needed.
+
+Maven web build → test → deploy
+
+maven_web_build → clean install, archive WAR
+
+maven_web_test → copy artifact, run tests
+
+maven_web_deploy → copy artifact and deploy WAR to Tomcat via “Deploy war/ear to container” (configure credentials and Tomcat URL)
+
+Create pipeline view
+
+Dashboard → + beside All → Build Pipeline View → set upstream job to maven_web_build
+
+Verification
+
+Builds succeed, artifacts archived, downstream jobs triggered automatically.
+
+Troubleshooting
+
+If build fails, check console logs; ensure MAVEN_HOME and JDK configured in Jenkins global config.
+
+For Tomcat deploy, ensure manager credentials and context path are correct.
+
+9. Pipeline Creation Using Script (Declarative/Scripted)
+
+(PDF: script pipeline creation and executing pipeline.) 
+
+SE_Record_final
+
+Goal
+
+Create scripted pipeline job in Jenkins with stages pulling from Git and executing build/test/deploy.
+
+Prerequisites
+
+Jenkins with Pipeline plugin
+
+Steps
+
+New Pipeline Job
+
+Jenkins → New Item → pipeline_script → Pipeline type
+
+Pipeline Script (example declarative)
+
+pipeline {
+  agent any
+  stages {
+    stage('Checkout') {
+      steps {
+        git credentialsId: 'git-creds', url: 'https://github.com/USER/repo.git'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'mvn -B clean package'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh 'mvn test'
+      }
+    }
+    stage('Archive') {
+      steps {
+        archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+      }
+    }
+  }
+  post {
+    success { echo 'Build succeeded' }
+    failure { mail to: 'team@example.com', subject: 'Build failed', body: 'See Jenkins.' }
+  }
+}
+
+
+Save and run
+
+Check stage view and console logs.
+
+Verification
+
+Stage visualization shows success/failure per stage.
+
+Tips
+
+Use agent { docker { image 'maven:3.8-jdk-11' } } to run inside containerized build.
+
+10. Kubernetes Using Minikube & Nagios
+
+(PDF: start minikube, create service, expose Nginx, run Nagios monitoring via Docker.) 
+
+SE_Record_final
+
+Goal
+
+Use Minikube to create pods, scale deployments, expose Nginx, and run Nagios monitoring.
+
+Prerequisites
+
+Minikube & kubectl installed
+
+Docker installed for building images (optional)
+
+Steps
+
+Start Minikube
+
+minikube start
+
+Check status: minikube status
+
+Create Nginx deployment
+
+kubectl create deployment nginx --image=nginx
+
+Expose service: kubectl expose deployment nginx --type=NodePort --port=80
+
+Get service details: kubectl get svc
+
+Get NodePort: kubectl get svc nginx -o=jsonpath='{.spec.ports[0].nodePort}'
+
+Open Nginx via Minikube
+
+minikube service nginx --url → open in browser
+
+Scale pods
+
+kubectl scale deployment nginx --replicas=3
+
+kubectl get pods to verify
+
+Nagios with Docker (run Nagios inside container)
+
+If using Docker: pull image: docker pull jasonrivers/nagios:latest
+
+Run: map ports docker run -d --name nagios -p 8080:80 jasonrivers/nagios
+
+Access via http://localhost:8080 and configure monitoring.
+
+Nginx monitoring (explain)
+
+Use Nagios to monitor HTTP response, port status, and service uptime.
+
+Configure NRPE or check HTTP plugin to poll Nginx endpoints.
+
+Verification
+
+kubectl get pods,svc show expected resources.
+
+Nginx reachable via minikube service nginx.
+
+Troubleshooting
+
+If minikube start fails, check VM driver: minikube start --driver=docker.
+
+If service not reachable, ensure correct NodePort and firewall.
+
+11. Jenkins CI/CD — GitHub Webhook & Email Notifications
+
+(PDF: set up ngrok forwarding to Jenkins, webhook, Gmail app password setup & email plugin.) 
+
+SE_Record_final
+
+Goal
+
+Automate Jenkins builds triggered by GitHub webhooks and configure Gmail email notifications for build status.
+
+Prerequisites
+
+Publicly reachable Jenkins (via ngrok or server)
+
+GitHub repo admin rights
+
+Gmail account with App Password (2FA enabled)
+
+Steps
+
+Expose local Jenkins using ngrok
+
+ngrok http 8888 (replace 8888 with Jenkins port)
+
+Copy forwarding URL (e.g., https://xxxxx.ngrok.io)
+
+Configure GitHub webhook
+
+GitHub repo → Settings → Webhooks → Add webhook
+
+Payload URL: https://xxxxx.ngrok.io/github-webhook/ (append /github-webhook/)
+
+Content type: application/json
+
+Select push events, save.
+
+Configure Jenkins job
+
+Job config → Build Triggers → check “GitHub hook trigger for GITScm polling”
+
+Ensure Jenkins Git plugin and GitHub integration installed.
+
+Gmail App Password (for Jenkins email)
+
+Enable 2-step verification on Gmail account
+
+Create App password: Other → name Jenkins-Demo → copy 16-character password
+
+Install Email Extension Plugin
+
+Jenkins → Manage Jenkins → Manage Plugins → install “Email Extension Plugin”
+
+Configure global email settings
+
+Manage Jenkins → Configure System → Extended E-mail Notification:
+
+SMTP Server: smtp.gmail.com
+
+SMTP Port: 465
+
+Use SSL: enabled
+
+SMTP Auth: enabled
+
+Username: your Gmail
+
+Password: App password generated
+
+Job-level email configuration
+
+Job → Configure → Post-build Actions → Editable Email Notification
+
+Set recipients, triggers (e.g., Failure), content.
+
+Test
+
+Make a commit and push → webhook triggers build → confirm build starts.
+
+Check Jenkins email send logs and recipient inbox.
+
+Verification
+
+GitHub webhook deliveries show 200 in webhook history.
+
+Jenkins build triggered by push.
+
+Test email delivered to specified recipient.
+
+Troubleshooting
+
+If emails not delivered, check Jenkins logs, SMTP config, App password validity, and Gmail security alerts.
+
+ngrok URL changes each session — update webhook if using ephemeral URL.
+
+12. Virtual Machine (Ubuntu) & Deploy Web App on EC2
+
+(PDF: create EC2, set security, SSH with .pem, install Docker/Git, build Docker image and run container.) 
+
+SE_Record_final
+
+Goal
+
+Launch Ubuntu EC2 instance, configure security, install Docker, clone repo, build Docker image, run container serving app on public IP.
+
+Prerequisites
+
+AWS account with permissions to create EC2
+
+SSH key pair (.pem)
+
+Project Dockerfile / maven project in Git repo
+
+Steps
+
+Launch EC2 Instance
+
+AWS Console → EC2 → Launch Instance → choose Ubuntu Server (64-bit)
+
+Instance type: t3.micro (free tier)
+
+Configure instance details (VPC, subnet as desired)
+
+Add storage: e.g., 8GB
+
+Create key pair: RSA .pem and download
+
+Configure Security Group: allow SSH(22) from your IP, and HTTP(80) or custom app port (e.g., 8081) from 0.0.0.0/0 if public.
+
+Connect via SSH
+
+On local machine:
+
+chmod 400 week-122.pem
+ssh -i week-122.pem ubuntu@<EC2_PUBLIC_IP>
+
+
+Install Docker & Git
+
+On EC2:
+
+sudo apt-get update
+sudo apt-get install -y docker.io git
+sudo usermod -aG docker ubuntu  # optional: allow docker without sudo
+
+
+Verify: docker --version, git --version
+
+Clone Git repo
+
+git clone https://github.com/USER/repo.git
+
+cd repo
+
+Create Dockerfile (if missing)
+
+Example for a Maven web app:
+
+FROM openjdk:11-jre-slim
+WORKDIR /app
+COPY target/*.war app.war
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.war"]
+
+
+Build: sudo docker build -t img1 .
+
+Run container
+
+sudo docker run -d -p 8081:8080 img1
+
+Ensure port mapping matches Dockerfile EXPOSE.
+
+Access application
+
+Open http://<EC2_PUBLIC_IP>:8081/ (ensure security group allows port 8081)
+
+Check containers & images
+
+sudo docker ps / sudo docker images
+
+Verification
+
+Browser returns app page.
+
+curl http://localhost:8081 on EC2 returns application HTML.
+
+Troubleshooting
+
+If permission denied on .pem or SSH fails, ensure correct permissions and IP allowed in Security Group.
+
+If container fails, docker logs <container-id> for error details.
+
+13. Diagrams (Tuneora — Sequence / Class / Component)
+
+(PDF asks to produce standard UML diagrams.) 
+
+SE_Record_final
+
+Goal
+
+Produce Sequence, Class, and Component diagrams for a sample web app (Tuneora).
+
+Steps & tips
+
+Sequence Diagram
+
+Identify flow (e.g., User → Web UI → Backend Service → Database)
+
+Show messages: LoginRequest, Authenticate, FetchPlaylist, RenderPlaylist
+
+Use lifelines and asynchronous/synchronous messages.
+
+Class Diagram
+
+Identify main classes: User, Playlist, Track, PlaylistService, AuthService
+
+Add attributes (e.g., User: id, name, email) and methods (e.g., createPlaylist()), relations (association, aggregation, inheritance).
+
+Component Diagram
+
+Show high-level components: Web Client, API Gateway, Auth Service, Media Service, DB, Storage
+
+Mark interfaces and dependencies.
+
+Tools
+
+StarUML, draw.io, Lucidchart, or PlantUML
